@@ -29,9 +29,16 @@
 #include "raylib.h"
 #include "jni.h"
 
-#ifndef RMBAPI
-#define RMBAPI
-#endif
+/* ENUMS */
+
+typedef enum {
+    SENSOR_ACCELEROMETER    = 0,
+    SENSOR_GYROSCOPE        = 1,
+} Sensor;
+
+/* Callback define */
+
+typedef void (*Callback)();
 
 #if defined(__cplusplus)
 extern "C" {
@@ -47,7 +54,8 @@ extern "C" {
  *
  * @return Pointer to the Android application object.
  */
-RMBAPI struct android_app *GetAndroidApp(void);
+struct android_app *GetAndroidApp(void);
+
 
 /* Helper functions */
 
@@ -56,26 +64,19 @@ RMBAPI struct android_app *GetAndroidApp(void);
  *
  * @return Pointer to the JNIEnv structure.
  */
-RMBAPI JNIEnv* AttachCurrentThread(void);
+JNIEnv* AttachCurrentThread(void);
 
 /**
  * @brief Detaches the current native thread from the Java VM environment.
  */
-RMBAPI void DetachCurrentThread(void);
+void DetachCurrentThread(void);
 
 /**
  * @brief Returns a pointer to the class that initiated the native activity.
  *
  * @return Pointer to the native loader instance.
  */
-RMBAPI jobject GetNativeLoaderInstance(void);
-
-/**
- * @brief Returns a pointer to the raymob features class.
- *
- * @return Pointer to the features instance.
- */
-RMBAPI jobject GetFeaturesInstance(void);
+jobject GetNativeLoaderInstance(void);
 
 /**
  * @brief Gets the cache directory path of the Android application.
@@ -85,104 +86,143 @@ RMBAPI jobject GetFeaturesInstance(void);
  *
  * @return Pointer to the cache directory path string.
  */
-RMBAPI char* GetCacheDir(void);
+char* GetCacheDir(void);
 
-/* Feature functions */
+/**
+ * @brief Read file from cache directory, the readFile from raylib is reserved to read in Assets folder.
+ *
+ * @param fileName to read
+ * @return file content
+ */
+char* LoadCacheFile(const char* fileName);
+
+/**
+ * @brief Get localized string resource by name L10N.
+ *
+ * @see L10N: https://en.wikipedia.org/wiki/Internationalization_and_localization
+ *
+ * @warning This function returns a string allocated on the heap.
+ * The responsibility for releasing the memory lies with the user.
+ *
+ * @param value string resource name
+ * @return localized string
+ */
+char* GetL10NString(const char* value);
+
+
+/* Vibrator functions */
 
 /**
  * @brief Initiates device vibration for the specified duration in seconds.
  *
- * @param sec Duration of vibration in seconds.
+ * @param seconds Duration of vibration in seconds.
  */
-RMBAPI void Vibrate(float sec);
+void Vibrate(float seconds);
 
 /**
- * @brief Starts listening to accelerometer sensor data.
- */
-RMBAPI void StartAccelerometerListening(void);
-
-/**
- * @brief Stops listening to accelerometer sensor data.
- */
-RMBAPI void StopAccelerometerListening(void);
-
-/**
- * @brief Returns the current accelerometer axis vector.
+ * @brief Initiates device vibration for the specified duration in milliseconds.
  *
- * @return Current accelerometer axis vector.
+ * @param ms Duration of vibration in milliseconds.
  */
-RMBAPI Vector3 GetAccelerometerAxis(void);
+void VibrateMS(uint64_t ms);
 
 /**
- * @brief Returns the current value of the X-axis accelerometer.
+ * @brief Initiates device vibration for the specified duration and intensity in seconds.
  *
- * @return Current value of the X-axis accelerometer.
+ * @param seconds Duration of vibration in seconds.
+ * @param intensity Intensity of the vibration (0.0 to 1.0).
  */
-RMBAPI float GetAccelerometerX(void);
+void VibrateEx(float seconds, float intensity);
 
 /**
- * @brief Returns the current value of the Y-axis accelerometer.
+ * @brief Initiates device vibration for the specified duration and intensity in milliseconds.
  *
- * @return Current value of the Y-axis accelerometer.
+ * @param ms Duration of vibration in milliseconds.
+ * @param intensity Intensity of the vibration (0.0 to 1.0).
  */
-RMBAPI float GetAccelerometerY(void);
+void VibrateExMS(uint64_t ms, float intensity);
+
+
+/* Sensor functions */
 
 /**
- * @brief Returns the current value of the Z-axis accelerometer.
- *
- * @return Current value of the Z-axis accelerometer.
+ * @brief Initializes the sensor manager for accessing device sensors.
  */
-RMBAPI float GetAccelerometerZ(void);
+void InitSensorManager(void);
+
+/**
+ * @brief Enables the specified sensor.
+ *
+ * @param sensor The sensor to be enabled (e.g., Gyroscope, Accelerometer).
+ */
+void EnableSensor(Sensor sensor);
+
+/**
+ * @brief Disables the specified sensor.
+ *
+ * @param sensor The sensor to be disabled (e.g., Gyroscope, Accelerometer).
+ */
+void DisableSensor(Sensor sensor);
+
+/**
+ * @brief Retrieves the current accelerometer axis values.
+ *
+ * @return A Vector3 representing the accelerometer axis (x, y, z).
+ */
+Vector3 GetAccelerotmerAxis(void);
+
+/**
+ * @brief Retrieves the current gyroscope axis values.
+ *
+ * @return A Vector3 representing the gyroscope axis (x, y, z).
+ */
+Vector3 GetGyroscopeAxis(void);
+
+
+/* Soft Keyboard functions */
 
 /**
  * @brief Displays the soft keyboard on the screen.
  */
-RMBAPI void ShowSoftKeyboard(void);
+void ShowSoftKeyboard(void);
 
 /**
  * @brief Hides the soft keyboard from the screen.
  */
-RMBAPI void HideSoftKeyboard(void);
-
-/**
- * @brief Checks if the soft keyboard is currently active.
- *
- * @return True if the soft keyboard is active, false otherwise.
- */
-RMBAPI bool IsSoftKeyboardActive(void);
+void HideSoftKeyboard(void);
 
 /**
  * @brief Returns the code of the last key pressed on the soft keyboard.
  *
  * @return Code of the last key pressed on the soft keyboard.
  */
-RMBAPI int GetLastSoftKeyCode(void);
+int GetLastSoftKeyCode(void);
 
 /**
  * @brief Returns the label of the last key pressed on the soft keyboard.
  *
  * @return Label of the last key pressed on the soft keyboard.
  */
-RMBAPI unsigned short GetLastSoftKeyLabel(void);
+unsigned short GetLastSoftKeyLabel(void);
 
 /**
  * @brief Returns the Unicode value of the last key pressed on the soft keyboard.
  *
  * @return Unicode value of the last key pressed on the soft keyboard.
  */
-RMBAPI int GetLastSoftKeyUnicode(void);
+int GetLastSoftKeyUnicode(void);
 
 /**
  * @brief Returns the character value of the last key pressed on the soft keyboard.
  *
  * @return Character value of the last key pressed on the soft keyboard.
  */
-RMBAPI char GetLastSoftKeyChar(void);
+char GetLastSoftKeyChar(void);
 
 /**
  * @brief Clears the record of the last soft key pressed.
  */
-RMBAPI void ClearLastSoftKey(void);
+void ClearLastSoftKey(void);
 
 /**
  * @brief Allows editing the text displayed in the soft keyboard.
@@ -190,14 +230,50 @@ RMBAPI void ClearLastSoftKey(void);
  * @param text Pointer to the text to be edited.
  * @param size Size of the text buffer.
  */
-RMBAPI void SoftKeyboardEditText(char* text, unsigned int size);
+void SoftKeyboardEditText(char* text, unsigned int size);
 
 /**
  * @brief Controls whether the screen should remain on or not.
  *
  * @param keepOn If true, the screen should remain on; otherwise, it should not.
  */
-RMBAPI void KeepScreenOn(bool keepOn);
+void KeepScreenOn(bool keepOn);
+
+/* Callback functions */
+
+/**
+ * @brief Initializes all callback functions to their default states.
+ */
+void InitCallBacks(void);
+
+/**
+ * @brief Sets the callback function to be called when the application starts.
+ *
+ * @param callback The callback function to be executed on start.
+ */
+void SetOnStartCallBack(Callback callback);
+
+/**
+ * @brief Sets the callback function to be called when the application resumes.
+ *
+ * @param callback The callback function to be executed on resume.
+ */
+void SetOnResumeCallBack(Callback callback);
+
+/**
+ * @brief Sets the callback function to be called when the application pauses.
+ *
+ * @param callback The callback function to be executed on pause.
+ */
+void SetOnPauseCallBack(Callback callback);
+
+/**
+ * @brief Sets the callback function to be called when the application is destroyed.
+ *
+ * @param callback The callback function to be executed on destroy.
+ */
+void SetOnDestroyCallBack(Callback callback);
+
 
 #if defined(__cplusplus)
 }
