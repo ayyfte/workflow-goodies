@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     steps:
     - name: Checkout
@@ -23,7 +23,7 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
-       gradle-version: "8.10"
+       gradle-version: "latest"
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
     - uses: nttld/setup-ndk@v1
@@ -34,7 +34,7 @@ jobs:
     - name: Build for Android with gradle
       run: |
         ./gradlew.bat build
-      shell: cmd
+      shell: bash
       env: 
         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
 
