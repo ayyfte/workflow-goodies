@@ -1,7 +1,7 @@
 #include <string>
 #include <cmath>
 #include "raylib.h"
-#include "json.hpp"
+#include "./json.hpp"
 using namespace std;
 
 #if defined(PLATFORM_WEB)
