@@ -26,14 +26,14 @@ jobs:
        gradle-version: "8.10"
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-    - uses: nttld/setup-ndk@v1
+    - uses: Setup Android NDK 
       id: setup-ndk
       with:
         ndk-version: r21e
         add-to-path: true
     - name: Build for Android with gradle
       run: |
-        ./gradlew.bat build
+        ./gradlew build
       shell: bash
       env: 
         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
