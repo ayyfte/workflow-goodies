@@ -33,6 +33,7 @@ jobs:
         add-to-path: true
     - name: Build for Android with gradle
       run: |
+        chmod +x ./gradlew
         ./gradlew build
       shell: bash
       env: 
