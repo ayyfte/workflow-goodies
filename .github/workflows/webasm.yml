@@ -1,0 +1,60 @@
+name: WebAssembly
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    env:
+      RELEASE_NAME: raylib-dev_webassembly
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+  
+    - name: Setup emsdk
+      uses: mymindstorm/setup-emsdk@v12
+      with:
+        version: 3.1.30
+        actions-cache-folder: 'emsdk-cache'
+
+    - name: Build C++
+      run: |
+        emcc -o index.html main.cpp -Os -Wall .\lib\libraylib.a -I. -Iinclude\raylib -L. -Llib\libraylib -s USE_GLFW=3 --shell-file minshell.html -DPLATFORM_WEB
+      shell: cmd
+
+    - name: Archive files
+      run: 7z a ./main.zip index.html index.js index.wasm
+      shell: cmd
+      
+    - name: Create hash
+      run: git rev-parse HEAD > rev-hash.txt
+
+    - uses: dev-drprasad/delete-tag-and-release@v0.2.1
+      name: Delete latest alpha tag and release
+      with:
+        tag_name: alpha
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Sleep for 5 seconds, to allow the tag to be deleted (why?)
+      run: sleep 5s    
+      shell: bash
+
+    - uses: ncipollo/release-action@v1.12.0
+      name: Create new tag and release and upload artifacts
+      with:
+        name: alpha
+        commit: main
+        tag: alpha
+        prerelease: true
+        artifacts: "./main.zip"
+        body: Latest Alpha release on this branch
+        token: ${{ secrets.GITHUB_TOKEN }}
