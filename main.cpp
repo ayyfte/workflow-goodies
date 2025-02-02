@@ -8,6 +8,14 @@ using namespace std;
   #include <emscripten/emscripten.h>
 #endif
 
+#ifdef __EMSCRIPTEN__
+   // Specific fixes for emscripten (e.g., casting integers to floats)
+   #define CAST_TO_FLOAT(val) static_cast<float>(val)
+#else
+   // Default behavior for other compilers
+   #define CAST_TO_FLOAT(val) (val)
+#endif
+
 void update(), draw();
 void gameLoop() { update(); BeginDrawing(); draw(); EndDrawing(); }
 
@@ -301,14 +309,16 @@ void draw() {
         for (int i = 0; i < maxLevel; i++) {
             int x = (i % 3) * width + (width/4)*(i%3);
             int y = (i / 3) * width + (width/4)*(i/3);
-            Rectangle boxForLevel = {width/4+x, sceneZeroYScroll+screenHeight/2+width/4+y, width, width};
+            //Rectangle boxForLevel = {width/4+x, sceneZeroYScroll+screenHeight/2+width/4+y, width, width};
+						Rectangle boxForLevel = {CAST_TO_FLOAT(width / 4 + x), CAST_TO_FLOAT(sceneZeroYScroll + screenHeight / 2 + width / 4 + y), CAST_TO_FLOAT(width), CAST_TO_FLOAT(width)};
             DrawRectangleLinesEx(boxForLevel, width/20, WHITE);
             DrawText(to_string(i+1).c_str(),width/4+x+width/2-MeasureText(to_string(i+1).c_str(),width/2)/2,sceneZeroYScroll+screenHeight/2+width/4+y+width/4,width/2,WHITE);
         }
         if (-sceneZeroYScroll<screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4-screenHeight/30) DrawRectangleGradientV(0, screenHeight-screenHeight/8, screenWidth, screenHeight/8, (Color){255, 255, 255, 0}, (Color){255, 255, 255, 128});
     }
     else if (SCENE==1) {
-    DrawTextureEx(imageButtonBack, {screenWidth/16, screenWidth/8}, -45.0f, screenWidth/128, WHITE);
+    //DrawTextureEx(imageButtonBack, {screenWidth/16, screenWidth/8}, -45.0f, screenWidth/128, WHITE);
+		DrawTextureEx(imageButtonBack, {CAST_TO_FLOAT(screenWidth / 16), CAST_TO_FLOAT(screenWidth / 8)}, -45.0f, CAST_TO_FLOAT(screenWidth / 128), WHITE);
     for (nlohmann::json::size_type rowIndex = 0; rowIndex < tileMap.size(); ++rowIndex) {
         const auto& row = tileMap[rowIndex];
         for (nlohmann::json::size_type tileIndex = 0; tileIndex < row.size(); ++tileIndex) {
