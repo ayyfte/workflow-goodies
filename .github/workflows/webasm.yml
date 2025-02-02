@@ -27,7 +27,7 @@ jobs:
 
     - name: Build C++
       run: |
-        em++ -o index.html main.cpp -Os -Wall .\lib\libraylib.a -I. -Iinclude\raylib -L. -Llib\libraylib -s USE_GLFW=3 --shell-file minshell.html -DPLATFORM_WEB
+        em++ -o index.html main.cpp -Os -Wall .\lib\libraylib.a -I. -Iinclude\raylib -L. -Llib\libraylib -s USE_GLFW=3 --shell-file minshell.html -DPLATFORM_WEB --embed-file levels.json --embed-file assets@/assets
       shell: cmd
 
     - name: Archive files
