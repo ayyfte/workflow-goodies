@@ -22,12 +22,12 @@ jobs:
     - name: Setup emsdk
       uses: mymindstorm/setup-emsdk@v12
       with:
-        version: 3.1.30
+        version: latest
         actions-cache-folder: 'emsdk-cache'
 
     - name: Build C++
       run: |
-        emcc -o index.html main.cpp -Os -Wall .\lib\libraylib.a -I. -Iinclude\raylib -L. -Llib\libraylib -s USE_GLFW=3 --shell-file minshell.html -DPLATFORM_WEB
+        em++ -o index.html main.cpp -Os -Wall .\lib\libraylib.a -I. -Iinclude\raylib -L. -Llib\libraylib -s USE_GLFW=3 --shell-file minshell.html -DPLATFORM_WEB
       shell: cmd
 
     - name: Archive files
