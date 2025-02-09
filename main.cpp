@@ -261,9 +261,9 @@ int main(void) {
     InitWindow(300, 640, "abductix");
     emscripten_set_main_loop(gameLoop, 30, 1);
     #else
-    InitWindow(300, 640, "abductix");
-    //InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
-    //ToggleFullscreen();
+    //InitWindow(300, 640, "abductix");
+    InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
+    ToggleFullscreen();
     SetTargetFPS(30);
     //InitLevel();
     
@@ -289,7 +289,7 @@ void update() {
     screenHeight = GetScreenHeight();
     if (SCENE==0) {
         if (changeSCN==1) {SCENE=1;changeSCN=0;FRAME=0;InitLevel();}
-        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) sceneZeroYScroll += MouseY - lastMousePosition.y;
+        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && abs(MouseY - lastMousePosition.y)<screenHeight/50) sceneZeroYScroll += MouseY - lastMousePosition.y;
         if (sceneZeroYScroll>0) sceneZeroYScroll-=(screenHeight/60);
         if (-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) sceneZeroYScroll+=screenHeight/60;
         if (abs(sceneZeroYScroll-(screenHeight/60))<screenHeight/60) sceneZeroYScroll=0;
