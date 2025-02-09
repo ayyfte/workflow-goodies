@@ -261,11 +261,10 @@ int main(void) {
     InitWindow(300, 640, "abductix");
     emscripten_set_main_loop(gameLoop, 30, 1);
     #else
-    //InitWindow(300, 640, "abductix");
-    InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
-    ToggleFullscreen();
+    InitWindow(300, 640, "abductix");
+    //InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
+    //ToggleFullscreen();
     SetTargetFPS(30);
-    //InitLevel();
     
     while (!WindowShouldClose()) gameLoop();
     #endif
