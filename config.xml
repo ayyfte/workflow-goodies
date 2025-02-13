@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="demo.ayyfte.experiment" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Experiment</name>
+    <description>Automated GitHub Workflow build</description>
+    <author email="whmsft@outlook.com" href="https://github.com/ayyfte">whmsft</author>
+    <content src="index.html" />
+    <allow-intent href="http://*/*" />
+	<allow-intent href="https://*/*" />
+	<preference name="SplashScreenDelay" value="-1" />
+	<preference name="Fullscreen" value="true"/>
+	<preference name="Orientation" value="portrait"/>
+	<platform name="android">
+	  <icon background="res/icon/android/ldpi-background.png" density="ldpi" foreground="res/icon/android/ldpi-foreground.png" />
+	  <icon background="res/icon/android/mdpi-background.png" density="mdpi" foreground="res/icon/android/mdpi-foreground.png" />
+	  <icon background="res/icon/android/hdpi-background.png" density="hdpi" foreground="res/icon/android/hdpi-foreground.png" />
+	  <icon background="res/icon/android/xhdpi-background.png" density="xhdpi" foreground="res/icon/android/xhdpi-foreground.png" />
+	  <icon background="res/icon/android/xxhdpi-background.png" density="xxhdpi" foreground="res/icon/android/xxhdpi-foreground.png" />
+	  <icon background="res/icon/android/xxxhdpi-background.png" density="xxxhdpi" foreground="res/icon/android/xxxhdpi-foreground.png" />
+	</platform>
+</widget>
+

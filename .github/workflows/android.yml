@@ -1,0 +1,69 @@
+name: Build Alpha
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+# Android shit starts here...    
+    - name: Set-up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    #    cache: gradle
+    #- name: Grant execute permission for gradlew
+    #  run: chmod +x gradlew
+    #- name: Build with Gradle
+    #  run: ./gradlew build
+    
+    - name : Set-up Node
+      uses: actions/setup-node@v3
+      with:
+          node-version: 16
+
+    - name: Set-up Cordova+tools
+      run:  npm install -g cordova && npm install -g cordova-res
+
+    - name: Set-up Cordova Android
+      run: cordova platform add android #&& cordova-res android
+      shell: bash
+
+    - name: Build Cordova Package for android
+      run: cordova build android
+      shell: bash
+ # Android shit ends here...
+
+    - name: Create hash
+      run: git rev-parse HEAD > rev-hash.txt
+
+    - uses: dev-drprasad/delete-tag-and-release@v0.2.1
+      name: Delete latest alpha tag and release
+      with:
+        tag_name: alpha
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Sleep for 5 seconds, to allow the tag to be deleted (why?)
+      run: sleep 5s    
+      shell: bash
+
+    - uses: ncipollo/release-action@v1.12.0
+      name: Create new tag and release and upload artifacts
+      with:
+        name: alpha
+        commit: main
+        tag: alpha
+        prerelease: true
+        artifacts: "platforms/android/app/build/outputs/apk/debug/app-debug.apk, rev-hash.txt"
+        body: Latest Alpha release on this branch
+        token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,15 @@
+{
+  "name": "demo.ayyfte.experiment",
+  "displayName": "Experiment",
+  "version": "0.0.1",
+  "description": "Automated GitHub Workflow to bundle Cordova for Android",
+  "main": "verf.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Ayyfte",
+  "license": "GNU GPLv3"
+}
